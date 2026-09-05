@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Metall balansi</title>
+<meta name="theme-color" content="#1B1815">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #1B1815;
+    background-image: radial-gradient(circle at 15% 0%, rgba(198,161,91,0.06), transparent 40%);
+    font-family: 'Inter', sans-serif;
+    color: #F2EDE4;
+    padding: 24px 16px 90px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:22px; }
+  .headerLeft { display:flex; align-items:center; gap:12px; }
+  .brandMark { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#C6A15B,#9C7C3E); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:18px; }
+  h1 { font-family:'Fraunces',serif; font-weight:600; font-size:22px; margin:0; letter-spacing:-0.01em; }
+  .subtitle { margin:2px 0 0; font-size:12.5px; color:#9B9284; }
+  .addBtn { display:flex; align-items:center; gap:6px; background:#C6A15B; color:#1B1815; border:none; border-radius:8px; padding:10px 16px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .cardsRow { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-bottom:24px; }
+  .card { background:#242019; border:1px solid #332D24; border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px; }
+  .cardIcon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:15px; }
+  .cardLabel { font-size:11.5px; color:#9B9284; margin-bottom:2px; }
+  .cardValue { font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .cardSub { font-size:11.5px; color:#9B9284; font-family:'Inter',sans-serif; }
+  .beamSection { background:#242019; border:1px solid #332D24; border-radius:12px; padding:18px 20px; margin-bottom:22px; }
+  .sectionTitle { font-family:'Fraunces',serif; font-size:15px; font-weight:600; margin:0 0 14px; }
+  .beamRow { margin-bottom:14px; }
+  .beamLabelRow { display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px; color:#D8D0C2; }
+  .beamMaster { font-weight:600; }
+  .beamKirim { font-family:'IBM Plex Mono',monospace; color:#9B9284; }
+  .beamTrack { display:flex; height:10px; border-radius:5px; overflow:hidden; background:#161310; }
+  .beamSeg { height:100%; }
+  .legend { display:flex; gap:16px; margin-top:14px; flex-wrap:wrap; }
+  .legendItem { display:flex; align-items:center; gap:6px; font-size:11.5px; color:#9B9284; }
+  .legendDot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .filters { display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  select { background:#242019; border:1px solid #332D24; color:#F2EDE4; border-radius:8px; padding:8px 12px; font-size:13px; font-family:inherit; }
+  .tableSection { background:#242019; border:1px solid #332D24; border-radius:12px; overflow:hidden; }
+  .tableScroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; min-width:680px; }
+  th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:#9B9284; padding:11px 14px; border-bottom:1px solid #332D24; font-weight:600; }
+  td { padding:11px 14px; font-size:13px; border-bottom:1px solid #2A251E; }
+  .num { text-align:right; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; }
+  .metalPill { padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; }
+  .deleteBtn { background:transparent; border:none; color:#9B9284; cursor:pointer; padding:6px; border-radius:6px; }
+  .empty { padding:44px 20px; text-align:center; }
+  .empty p { color:#9B9284; font-size:13.5px; margin-bottom:12px; }
+  .emptyBtn { background:transparent; border:1px solid #C6A15B; color:#C6A15B; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .overlay { position:fixed; inset:0; background:rgba(10,8,6,0.65); display:none; align-items:center; justify-content:center; padding:16px; z-index:50; }
+  .overlay.open { display:flex; }
+  .modal { background:#242019; border:1px solid #332D24; border-radius:14px; padding:22px; width:100%; max-width:460px; max-height:90vh; overflow-y:auto; }
+  .modalHeader { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .modalTitle { font-family:'Fraunces',serif; font-size:17px; font-weight:600; margin:0; }
+  .closeBtn { background:transparent; border:none; color:#9B9284; cursor:pointer; font-size:18px; }
+  .formGrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .field.full { grid-column:1/-1; }
+  .fieldLabel { font-size:11.5px; color:#9B9284; }
+  input { background:#1B1815; border:1px solid #332D24; border-radius:8px; padding:9px 11px; color:#F2EDE4; font-size:13.5px; font-family:inherit; outline:none; width:100%; }
+  .segGroup { display:flex; gap:8px; }
+  .segBtn { flex:1; padding:9px 0; border-radius:8px; border:1px solid #332D24; background:transparent; color:#F2EDE4; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .segBtn.active { border-color: currentColor; }
+  .hint { font-size:11.5px; color:#75695C; margin:14px 0 0; }
+  .modalActions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+  .cancelBtn { background:transparent; border:1px solid #332D24; color:#D8D0C2; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .saveBtn { background:#C6A15B; border:none; color:#1B1815; border-radius:8px; padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .dangerBtn { background:#C1584A; border:none; color:#fff; border-radius:8px; padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .confirmBox { background:#242019; border:1px solid #332D24; border-radius:14px; padding:20px; width:100%; max-width:320px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="headerLeft">
+      <div class="brandMark">⚖️</div>
+      <div>
+        <h1>Metall balansi</h1>
+        <p class="subtitle">Zargarlik ustaxonasi — kirim, chiqim va ugar hisobi</p>
+      </div>
+    </div>
+    <button class="addBtn" onclick="openForm()">+ Yozuv qo'shish</button>
+  </header>
+
+  <div class="cardsRow" id="cardsRow"></div>
+
+  <section class="beamSection" id="beamSection" style="display:none">
+    <h2 class="sectionTitle">Usta bo'yicha tarozi</h2>
+    <div id="beamList"></div>
+    <div class="legend">
+      <span class="legendItem"><span class="legendDot" style="background:#8AA876"></span>Mahsulot</span>
+      <span class="legendItem"><span class="legendDot" style="background:#B9BEC7"></span>Qoldiq</span>
+      <span class="legendItem"><span class="legendDot" style="background:#C1584A"></span>Ugar</span>
+    </div>
+  </section>
+
+  <div class="filters">
+    <select id="filterMetal" onchange="render()">
+      <option value="all">Barcha metall</option>
+      <option value="oltin">Oltin</option>
+      <option value="kumush">Kumush</option>
+    </select>
+    <select id="filterMaster" onchange="render()">
+      <option value="all">Barcha ustalar</option>
+    </select>
+  </div>
+
+  <section class="tableSection" id="tableSection"></section>
+</div>
+
+<div class="overlay" id="formOverlay" onclick="if(event.target===this) closeForm()">
+  <form class="modal" onsubmit="return submitForm(event)">
+    <div class="modalHeader">
+      <h3 class="modalTitle">Yangi yozuv</h3>
+      <button type="button" class="closeBtn" onclick="closeForm()">✕</button>
+    </div>
+    <div class="formGrid">
+      <label class="field"><span class="fieldLabel">Sana</span><input type="date" id="f_date" required></label>
+      <label class="field"><span class="fieldLabel">Usta ismi</span><input type="text" id="f_master" placeholder="Masalan: Aziz aka" required></label>
+      <label class="field"><span class="fieldLabel">Metall turi</span>
+        <div class="segGroup" id="metalSeg">
+          <button type="button" class="segBtn" data-val="oltin" onclick="pickMetal('oltin')">Oltin</button>
+          <button type="button" class="segBtn" data-val="kumush" onclick="pickMetal('kumush')">Kumush</button>
+        </div>
+      </label>
+      <label class="field"><span class="fieldLabel">Proba</span><input type="text" id="f_proba" placeholder="585"></label>
+      <label class="field"><span class="fieldLabel">Kirgan metall (g)</span><input type="number" step="0.01" min="0" id="f_kirim" placeholder="0.00" required></label>
+      <label class="field"><span class="fieldLabel">Tayyor mahsulot (g)</span><input type="number" step="0.01" min="0" id="f_chiqim" placeholder="0.00"></label>
+      <label class="field"><span class="fieldLabel">Qolgan metall (g)</span><input type="number" step="0.01" min="0" id="f_qoldiq" placeholder="0.00"></label>
+      <label class="field full"><span class="fieldLabel">Izoh</span><input type="text" id="f_note" placeholder="Ixtiyoriy"></label>
+    </div>
+    <p class="hint">Ugar avtomatik hisoblanadi: kirim − mahsulot − qoldiq.</p>
+    <div class="modalActions">
+      <button type="button" class="cancelBtn" onclick="closeForm()">Bekor qilish</button>
+      <button type="submit" class="saveBtn">Saqlash</button>
+    </div>
+  </form>
+</div>
+
+<div class="overlay" id="confirmOverlay" onclick="if(event.target===this) closeConfirm()">
+  <div class="confirmBox">
+    <p style="font-size:14px;margin:0 0 4px">Bu yozuvni o'chirmoqchimisiz?</p>
+    <div class="modalActions">
+      <button class="cancelBtn" onclick="closeConfirm()">Yo'q</button>
+      <button class="dangerBtn" onclick="confirmDeleteNow()">O'chirish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const METAL = {
+  oltin: { label: 'Oltin', color: '#C6A15B', soft: 'rgba(198,161,91,0.16)' },
+  kumush: { label: 'Kumush', color: '#B9BEC7', soft: 'rgba(185,190,199,0.16)' },
+};
+const STORAGE_KEY = 'zargarlik_metal_entries';
+let entries = [];
+let pendingMetal = 'oltin';
+let deleteId = null;
+
+function load() {
+  try { entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { entries = []; }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+function uid() { return Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+function fmt(n) { return (Number(n)||0).toLocaleString('ru-RU', {maximumFractionDigits:2}); }
+
+function openForm() {
+  document.getElementById('f_date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f_master').value = '';
+  document.getElementById('f_proba').value = '585';
+  document.getElementById('f_kirim').value = '';
+  document.getElementById('f_chiqim').value = '';
+  document.getElementById('f_qoldiq').value = '';
+  document.getElementById('f_note').value = '';
+  pickMetal('oltin');
+  document.getElementById('formOverlay').classList.add('open');
+}
+function closeForm() { document.getElementById('formOverlay').classList.remove('open'); }
+function pickMetal(val) {
+  pendingMetal = val;
+  document.querySelectorAll('#metalSeg .segBtn').forEach(b => {
+    if (b.dataset.val === val) {
+      b.classList.add('active');
+      b.style.background = METAL[val].color;
+      b.style.color = '#1B1815';
+      b.style.borderColor = METAL[val].color;
+    } else {
+      b.classList.remove('active');
+      b.style.background = 'transparent';
+      b.style.color = '#F2EDE4';
+      b.style.borderColor = '#332D24';
+    }
+  });
+}
+function submitForm(e) {
+  e.preventDefault();
+  const master = document.getElementById('f_master').value.trim();
+  const kirim = document.getElementById('f_kirim').value;
+  if (!master || kirim === '') return false;
+  entries.unshift({
+    id: uid(),
+    date: document.getElementById('f_date').value,
+    master,
+    metalType: pendingMetal,
+    proba: document.getElementById('f_proba').value.trim(),
+    kirim: Number(kirim) || 0,
+    chiqim: Number(document.getElementById('f_chiqim').value) || 0,
+    qoldiq: Number(document.getElementById('f_qoldiq').value) || 0,
+    note: document.getElementById('f_note').value.trim(),
+  });
+  save();
+  closeForm();
+  render();
+  return false;
+}
+function askDelete(id) { deleteId = id; document.getElementById('confirmOverlay').classList.add('open'); }
+function closeConfirm() { deleteId = null; document.getElementById('confirmOverlay').classList.remove('open'); }
+function confirmDeleteNow() {
+  entries = entries.filter(e => e.id !== deleteId);
+  save();
+  closeConfirm();
+  render();
+}
+
+function getFiltered() {
+  const fm = document.getElementById('filterMetal').value;
+  const fu = document.getElementById('filterMaster').value;
+  return entries
+    .filter(e => fm === 'all' || e.metalType === fm)
+    .filter(e => fu === 'all' || e.master === fu)
+    .sort((a,b) => a.date < b.date ? 1 : -1);
+}
+
+function render() {
+  const masters = [...new Set(entries.map(e => e.master))].filter(Boolean).sort();
+  const masterSel = document.getElementById('filterMaster');
+  const curMaster = masterSel.value;
+  masterSel.innerHTML = '<option value="all">Barcha ustalar</option>' + masters.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('');
+  masterSel.value = masters.includes(curMaster) ? curMaster : 'all';
+
+  const filtered = getFiltered();
+  const totals = filtered.reduce((acc,e) => {
+    const kirim = Number(e.kirim)||0, chiqim = Number(e.chiqim)||0, qoldiq = Number(e.qoldiq)||0;
+    acc.kirim += kirim; acc.chiqim += chiqim; acc.qoldiq += qoldiq; acc.ugar += kirim-chiqim-qoldiq;
+    return acc;
+  }, {kirim:0,chiqim:0,qoldiq:0,ugar:0});
+  const ugarPct = totals.kirim > 0 ? (totals.ugar/totals.kirim*100) : 0;
+
+  document.getElementById('cardsRow').innerHTML = `
+    <div class="card"><div class="cardIcon" style="color:#C6A15B;background:#C6A15B22">📦</div><div><div class="cardLabel">Jami kirim</div><div class="cardValue">${fmt(totals.kirim)} g</div></div></div>
+    <div class="card"><div class="cardIcon" style="color:#8AA876;background:#8AA87622">💍</div><div><div class="cardLabel">Tayyor mahsulot</div><div class="cardValue">${fmt(totals.chiqim)} g</div></div></div>
+    <div class="card"><div class="cardIcon" style="color:#B9BEC7;background:#B9BEC722">⚖️</div><div><div class="cardLabel">Qoldiq metall</div><div class="cardValue">${fmt(totals.qoldiq)} g</div></div></div>
+    <div class="card"><div class="cardIcon" style="color:#C1584A;background:#C1584A22">📉</div><div><div class="cardLabel">Ugar</div><div class="cardValue">${fmt(totals.ugar)} g ${totals.kirim>0?`<span class="cardSub">· ${ugarPct.toFixed(1)}%</span>`:''}</div></div></div>
+  `;
+
+  // per-master beam
+  const byMaster = new Map();
+  filtered.forEach(e => {
+    const kirim = Number(e.kirim)||0, chiqim = Number(e.chiqim)||0, qoldiq = Number(e.qoldiq)||0;
+    const cur = byMaster.get(e.master) || {master:e.master,kirim:0,chiqim:0,qoldiq:0,ugar:0};
+    cur.kirim += kirim; cur.chiqim += chiqim; cur.qoldiq += qoldiq; cur.ugar += kirim-chiqim-qoldiq;
+    byMaster.set(e.master, cur);
+  });
+  const beamArr = [...byMaster.values()].sort((a,b) => b.kirim - a.kirim);
+  const beamSection = document.getElementById('beamSection');
+  if (beamArr.length > 0) {
+    beamSection.style.display = 'block';
+    document.getElementById('beamList').innerHTML = beamArr.map(m => {
+      const total = m.kirim || 1;
+      const chiqimPct = Math.max(0, m.chiqim/total*100);
+      const qoldiqPct = Math.max(0, m.qoldiq/total*100);
+      const ugarPctRow = Math.max(0, 100-chiqimPct-qoldiqPct);
+      return `<div class="beamRow">
+        <div class="beamLabelRow"><span class="beamMaster">${escapeHtml(m.master)}</span><span class="beamKirim">${fmt(m.kirim)} g</span></div>
+        <div class="beamTrack">
+          <div class="beamSeg" style="width:${chiqimPct}%;background:#8AA876"></div>
+          <div class="beamSeg" style="width:${qoldiqPct}%;background:#B9BEC7"></div>
+          <div class="beamSeg" style="width:${ugarPctRow}%;background:#C1584A"></div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    beamSection.style.display = 'none';
+  }
+
+  // table
+  const tableSection = document.getElementById('tableSection');
+  if (filtered.length === 0) {
+    tableSection.innerHTML = `<div class="empty"><p>Hali yozuv yo'q.</p><button class="emptyBtn" onclick="openForm()">Birinchi yozuvni qo'shish</button></div>`;
+  } else {
+    const rows = filtered.map(e => {
+      const kirim = Number(e.kirim)||0, chiqim = Number(e.chiqim)||0, qoldiq = Number(e.qoldiq)||0;
+      const ugar = kirim-chiqim-qoldiq;
+      const metal = METAL[e.metalType];
+      return `<tr>
+        <td>${e.date}</td>
+        <td>${escapeHtml(e.master)}</td>
+        <td><span class="metalPill" style="background:${metal.soft};color:${metal.color}">${metal.label}${e.proba?' · '+escapeHtml(e.proba):''}</span></td>
+        <td class="num">${fmt(kirim)}</td>
+        <td class="num">${fmt(chiqim)}</td>
+        <td class="num">${fmt(qoldiq)}</td>
+        <td class="num" style="color:${ugar<0?'#C1584A':'#E7A99A'};font-weight:600">${fmt(ugar)}${ugar<0?' ⚠':''}</td>
+        <td style="text-align:right"><button class="deleteBtn" onclick="askDelete('${e.id}')">🗑</button></td>
+      </tr>`;
+    }).join('');
+    tableSection.innerHTML = `<div class="tableScroll"><table>
+      <thead><tr><th>Sana</th><th>Usta</th><th>Metall</th><th style="text-align:right">Kirim (g)</th><th style="text-align:right">Mahsulot (g)</th><th style="text-align:right">Qoldiq (g)</th><th style="text-align:right">Ugar (g)</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+load();
+render();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
